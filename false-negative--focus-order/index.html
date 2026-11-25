@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Test Example: Focus Order False Negative</title>
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    /*************************/
+    /* Custom example styles */
+    /*************************/
+
+      .article-row {
+        flex-direction: row-reverse;
+      }
+  </style>
+
+  <meta name="robots" content="noindex">
+</head>
+<body>
+
+  <a href="#example-container" class="skip-link">Skip to example</a>
+
+  <div class="page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../">← Examples</a>
+    </nav>
+    <h1>Accessibility Test Example: Focus Order False Negative</h1>
+    <p class="page-description">CSS can reorder elements visually without changing the DOM order. This isn't always a problem, and has legitimate use cases, like reversing image + text rows. It becomes a problem when the content has a meaningful sequence and the two orderings (visual and focus/screen reader) tell a different story.</p>
+    <p class="page-description">Automated tools won't flag this, but a keyboard or screen reader user experiences the content in DOM order, which may be completely backwards from what's shown on screen.</p>
+
+    <div id="example-container">
+      <h2>Latest updates</h2>
+      <div class="card-row article-row">
+        <article class="card">
+          <p class="date">March 1, 2025</p>
+          <h3>Update #1: Project kickoff</h3>
+          <p>The project officially launched this week. Teams have been briefed and initial milestones are set.</p>
+          <a href="#" aria-label="read more about Update #1: Project kickoff">Read more</a>
+        </article>
+        <article class="card">
+          <p class="date">March 15, 2025</p>
+          <h3>Update #2: First milestone reached</h3>
+          <p>The team completed the discovery phase ahead of schedule. Design concepts are now in review.</p>
+          <a href="#" aria-label="read more about Update #2: First milestone reached">Read more</a>
+        </article>
+        <article class="card">
+          <p class="date">April 2, 2025</p>
+          <h3>Update #3: Development begins</h3>
+          <p>With designs approved, the development team has started building out the core features.</p>
+          <a href="#" aria-label="read more about Update #3: Development begins">Read more</a>
+        </article>
+      </div>
+    </div>
+
+    <div class="example-note">
+      <p><strong>What's broken:</strong> The cards are displayed right-to-left (Update #3 → #2 → #1) due to <code>flex-direction: row-reverse</code>, but the DOM order is #1 → #2 → #3. A sighted user reads the most recent update first. A screen reader or keyboard user encounters them oldest-first, the opposite narrative.</p>
+      <p><strong>Why it matters here:</strong> These updates tell a chronological story. The order changes the meaning, and the order is <em>different between sighted users and screen reader users</em>. A user relying on a screen reader would hear the project kickoff <em>after</em> hearing that development has begun.</p>
+      <p><strong>Why automated tools miss it:</strong> The elements are valid, focusable, and in a logical DOM order. No ARIA is missing. The mismatch between visual and reading order requires a human to judge whether the sequence carries meaning.</p>
+    </div>
+
+  </div>
+
+</body>
+</html>

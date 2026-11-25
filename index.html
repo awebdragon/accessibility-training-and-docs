@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internal Accessibility Testing Examples</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /*************************/
+    /* Custom example styles */
+    /*************************/
+
+      .example-list {
+        margin-top: 1.5rem;
+        list-style: none;
+        margin-left: 0;
+      }
+
+      .example-list li {
+        border-top: 1px solid #e0e0e0;
+        padding: 0.75rem 0;
+      }
+
+      .example-list li:last-child {
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .example-list a {
+        font-weight: 600;
+        color: #222;
+      }
+
+      .example-list .example-desc {
+        display: block;
+        font-size: 0.875rem;
+        color: #555;
+        margin-top: 0.1rem;
+      }
+  </style>
+
+  <meta name="robots" content="noindex">
+</head>
+<body>
+
+  <div class="page">
+    <h1>Internal Accessibility Testing Examples</h1>
+    <p class="page-description">Live examples for use during accessibility training. Each page is designed to be scanned with automated tools (axe, ANDI) to illustrate what those tools can and cannot catch.</p>
+
+    <ul id="examples" class="example-list">
+      <li>
+        <a href="false-negative--focus-order/">Focus order false negative</a>
+        <span class="example-desc">Scrambled tab order that automated tools won't flag.</span>
+      </li>
+      <li>
+        <a href="false-negative--link-context/">Link Context false negative</a>
+        <span class="example-desc">Same link text with different destinations causes ambiguous link failures.</span>
+      </li>
+      <li>
+        <a href="false-negative--form-instructions/">Form Instructions & Errors</a>
+        <span class="example-desc">How automated scans miss error and instruction association (both live and on-submit), or how they miss insufficient descriptions in errors and instructions.</span>
+      </li>
+    </ul>
+  </div>
+
+</body>
+</html>

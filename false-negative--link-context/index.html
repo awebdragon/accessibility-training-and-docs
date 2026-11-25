@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Test Example: Meaningful Link Text in Context</title>
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    /*************************/
+    /* Custom example styles */
+    /*************************/
+  </style>
+
+  <meta name="robots" content="noindex">
+</head>
+<body>
+
+  <div class="page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../">← Examples</a>
+    </nav>
+    <h1>Accessibility Test Example: Meaningful Link Text in Context</h1>
+    <p class="page-description">Automated scanners check link text against known ambiguous phrases like "click here" or "read more", and correctly flag those. But they can't detect when more plausible-sounding text appears multiple times for different destinations. Five links all reading "View report" look fine to a scanner, even if they go to five completely different reports.</p>
+
+    <div id="example-container">
+
+      <h2>Caught by scanners: generic link text</h2>
+      <p>These links use phrases on the blocklist. Axe, WAVE, and ANDI will all flag these.</p>
+      <div class="card-row">
+        <article class="card">
+          <h3>Introducing our new strategy</h3>
+          <p>An overview of the direction we're taking into next year, and what that means for each team.</p>
+          <a href="/blog/new-strategy">Read more</a>
+        </article>
+        <article class="card">
+          <h3>Q3 team spotlight</h3>
+          <p>We sat down with three team members to talk about their work and what drives them.</p>
+          <a href="/blog/team-spotlight-q3">Read more</a>
+        </article>
+        <article class="card">
+          <h3>Year in review</h3>
+          <p>A look back at the milestones, challenges, and highlights from the past twelve months.</p>
+          <a href="/blog/year-in-review">Read more</a>
+        </article>
+      </div>
+
+      <h2>Missed by scanners: repeated plausible text</h2>
+      <p>These links use real, descriptive-sounding text — but the same label points to five different destinations. Most scanners won't flag this.</p>
+      <div class="card-row">
+        <article class="card">
+          <h3>Q1 2025</h3>
+          <p>Revenue up 12% year-over-year. Strongest performance in the North region.</p>
+          <a href="/reports/q1-2025">View report</a>
+        </article>
+        <article class="card">
+          <h3>Q2 2025</h3>
+          <p>Margin pressure from supply chain delays. Cost reduction initiatives launched.</p>
+          <a href="/reports/q2-2025">View report</a>
+        </article>
+        <article class="card">
+          <h3>Q3 2025</h3>
+          <p>Recovery on track. New product lines contributed 8% of total revenue.</p>
+          <a href="/reports/q3-2025">View report</a>
+        </article>
+        <article class="card">
+          <h3>Q4 2025</h3>
+          <p>Record full-year revenue. Board approved expanded budget for 2026.</p>
+          <a href="/reports/q4-2025">View report</a>
+        </article>
+        <article class="card">
+          <h3>Annual Summary</h3>
+          <p>Full-year rollup with year-over-year comparisons and projections for 2026.</p>
+          <a href="/reports/annual-2025">View report</a>
+        </article>
+      </div>
+
+    </div>
+
+    <div class="example-note">
+      <p><strong>How scanners check link text:</strong> They match against a blocklist of phrases ("click here", "read more", "here", "more", "link"). If your link text isn't on the list, it passes; the scanner has no way to reason about whether the same text is repeated for different destinations.</p>
+      <p><strong>What's broken in the second row:</strong> All five links read "View report" but go to five different destinations. Screen reader users can choose to navigate a page as a list of links without the surrounding content, so any nearby text providing context gets stripped away and they hear the same "view report" for all 5 different destinations.</p>
+      <p><strong>The fix:</strong> Add context via <code>aria-label</code> (e.g. <code>aria-label="View Q1 2025 report"</code>) or visually hidden text, or restructure so the heading text is inside the link. There is an argument for making the visible text more differentiated for users with cognitive disabilities, but this requirement is for AAA, not AA, and could be considered best-practice guidance for sites that only need to meet AA.</p>
+    </div>
+
+  </div>
+
+</body>
+</html>

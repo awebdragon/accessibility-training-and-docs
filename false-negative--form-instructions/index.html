@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Test Example: Form Instructions and Error Messages</title>
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    /*************************/
+    /* Custom example styles */
+    /*************************/
+
+    .field-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .field-pair-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6E6E6E;
+      margin: 0 0 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #e0e0e0;
+      grid-column: 1 / -1;
+    }
+
+    .field-variant {
+      padding: 1.25rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+
+    .field-variant-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .field-variant-label.broken {
+      color: #c0392b;
+    }
+
+    .field-variant-label.fixed {
+      color: #1D8147;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .form-group input {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 0.625rem;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      color: #222;
+    }
+
+    .form-group input:focus {
+      border-color: #222;
+      outline: none;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #222;
+    }
+
+    .form-group input[aria-invalid="true"] {
+      border-color: #c0392b;
+    }
+
+    .field-hint {
+      display: block;
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 0.3rem;
+    }
+
+    .error-message {
+      font-size: 0.8rem;
+      color: #c0392b;
+      margin-top: 0.3rem;
+    }
+
+    .required-marker {
+      color: #c0392b;
+      margin-left: 0.2rem;
+    }
+
+    .form-actions {
+      margin-top: 2rem;
+    }
+
+    .btn-submit {
+      padding: 0.5rem 1.25rem;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #222;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .btn-submit:focus-visible {
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #222;
+      outline: none;
+    }
+
+    .btn-submit:hover {
+      background: #444;
+    }
+
+    .example-note h3 {
+      margin: 1rem 0 0.25rem;
+      font-size: 0.875rem;
+    }
+
+    .example-note h3:first-child {
+      margin-top: 0;
+    }
+
+    @media (max-width: 600px) {
+      .field-pair {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <meta name="robots" content="noindex">
+</head>
+<body>
+
+  <div class="page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../">← Examples</a>
+    </nav>
+    <h1>Accessibility Test Example: Form Instructions and Error Messages</h1>
+    <p class="page-description">A field can have a valid label and still fail users - by not indicating it is required, by omitting format instructions, or by showing error messages that have no programmatic association with the field that triggered them. Automated scanners check that labels exist, not that they are sufficient.</p>
+
+    <div id="example-container">
+
+      <form novalidate onsubmit="handleSubmit(event)">
+
+        <!-- Pair 1: Required field -->
+        <div class="field-pair">
+          <p class="field-pair-label">Example 1: Required field</p>
+
+          <div class="field-variant">
+            <p class="field-variant-label broken">Broken</p>
+            <div class="form-group" id="name-broken-group">
+              <label for="name-broken">Full name</label>
+              <input type="text" id="name-broken" name="name-broken" autocomplete="name">
+            </div>
+          </div>
+
+          <div class="field-variant">
+            <p class="field-variant-label fixed">Fixed</p>
+            <div class="form-group" id="name-fixed-group">
+              <label for="name-fixed">Full name <span class="required-marker" aria-hidden="true">*</span></label>
+              <input type="text" id="name-fixed" name="name-fixed" autocomplete="name" aria-required="true">
+            </div>
+          </div>
+        </div>
+
+        <!-- Pair 2: Format instructions, associated vs. unassociated -->
+        <div class="field-pair">
+          <p class="field-pair-label">Example 2: Format instructions</p>
+
+          <div class="field-variant">
+            <p class="field-variant-label broken">Broken</p>
+            <div class="form-group" id="empid-broken-group">
+              <label for="empid-broken">Employee ID</label>
+              <input type="text" id="empid-broken" name="empid-broken">
+              <span class="field-hint">Format: two letters followed by six digits (e.g. AB123456)</span>
+            </div>
+          </div>
+
+          <div class="field-variant">
+            <p class="field-variant-label fixed">Fixed</p>
+            <div class="form-group" id="empid-fixed-group">
+              <label for="empid-fixed">Employee ID</label>
+              <input type="text" id="empid-fixed" name="empid-fixed" aria-describedby="empid-hint">
+              <span class="field-hint" id="empid-hint">Format: two letters followed by six digits (e.g. AB123456)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pair 3: Phone, no instructions, error must carry the format -->
+        <div class="field-pair">
+          <p class="field-pair-label">Example 3: No instructions - error message must fill the gap</p>
+
+          <div class="field-variant">
+            <p class="field-variant-label broken">Broken</p>
+            <div class="form-group" id="phone-broken-group">
+              <label for="phone-broken">Phone number</label>
+              <input type="tel" id="phone-broken" name="phone-broken" autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="field-variant">
+            <p class="field-variant-label fixed">Fixed</p>
+            <div class="form-group" id="phone-fixed-group">
+              <label for="phone-fixed">Phone number</label>
+              <input type="tel" id="phone-fixed" name="phone-fixed" autocomplete="tel" aria-describedby="phone-hint">
+            </div>
+          </div>
+        </div>
+
+        <!-- Pair 4: Placeholder-only instructions -->
+        <div class="field-pair">
+          <p class="field-pair-label">Example 4: Placeholder-only instructions</p>
+
+          <div class="field-variant">
+            <p class="field-variant-label broken">Broken</p>
+            <div class="form-group" id="number-broken-group">
+              <label for="number-broken">Number</label>
+              <input type="tel" id="number-broken" name="number-broken" autocomplete="tel" placeholder="e.g. 555-867-5309">
+            </div>
+          </div>
+
+          <div class="field-variant">
+            <p class="field-variant-label fixed">Fixed</p>
+            <div class="form-group" id="number-fixed-group">
+              <label for="number-fixed">Phone number</label>
+              <input type="tel" id="number-fixed" name="number-fixed" autocomplete="tel" placeholder="e.g. 555-867-5309">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Submit</button>
+        </div>
+
+      </form>
+
+    </div>
+
+    <div class="example-note">
+      <h3>Example 1: Required field</h3>
+      <p><strong>Broken:</strong> No indicator that the field is required. The error message ("This field is required") is injected on submit but not associated with the input. A scanner sees a valid label and passes.</p>
+      <p><strong>Fixed:</strong> <code>aria-required="true"</code> tells assistive technology the field is required before the user submits. The asterisk is decorative (<code>aria-hidden="true"</code>). The error is pre-connected via <code>aria-describedby</code> so when it appears, screen readers announce it. The error message names the field ("Full name is required") rather than just saying "This field is required".</p>
+
+      <h3>Example 2: Format instructions</h3>
+      <p><strong>Broken:</strong> The hint text is visible but has no <code>id</code> and is not linked to the input. The error ("Invalid entry") gives no guidance on how to fix the problem. Both the hint and error are injected or visible in the DOM but programmatically invisible to screen readers.</p>
+      <p><strong>Fixed:</strong> The hint has an <code>id</code> and is referenced in <code>aria-describedby</code>, so screen readers announce it when the field is focused. The error ("Invalid format. Expected: two letters followed by six digits, e.g. AB123456") points back to the existing instructions. To trigger: enter anything that does not match two letters followed by six digits.</p>
+
+      <h3>Example 3: No instructions - error must carry the format</h3>
+      <p><strong>Broken:</strong> No format instructions on the field. The error message ("Invalid phone number") appears when an invalid number is entered but does not tell the user what a valid number looks like. To trigger: enter <code>111-1111</code> and submit.</p>
+      <p><strong>Fixed:</strong> A persistent hint provides the format before the user types. The error message ("Invalid phone number. Expected format: 555-867-5309") includes the format so the user can correct their input even after the hint scrolls out of view. To trigger the error state: enter <code>111-1111</code> and submit.</p>
+
+      <h3>Example 4: Placeholder-only instructions</h3>
+      <p><strong>Broken:</strong> The label is vague ("Number") and the only format guidance is in the placeholder, which disappears as soon as the user starts typing. The error ("Invalid number") gives no hint about the correct format. To trigger: enter <code>111-1111</code> and submit.</p>
+      <p><strong>Fixed:</strong> The label is specific ("Phone number"), which alone provides enough context that a separate hint line is not needed. Because there is no persistent hint, the error message carries the format example ("Invalid phone number format. Input should look like: 555-867-5309"). To trigger: enter <code>111-1111</code> and submit.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // Phone validation: flags the shorthand pattern 111-1111 (7 digits, one hyphen) as invalid.
+    // A real pattern like 555-867-5309 (10 digits) passes.
+    function isInvalidPhone(val) {
+      var stripped = val.replace(/\D/g, '');
+      return val.trim() !== '' && stripped.length < 10;
+    }
+
+    // Employee ID: must be exactly 2 letters then 6 digits
+    function isInvalidEmpId(val) {
+      return val.trim() !== '' && !/^[A-Za-z]{2}\d{6}$/.test(val.trim());
+    }
+
+    function injectError(containerId, errorId, message) {
+      var container = document.getElementById(containerId);
+      var existing = document.getElementById(errorId);
+      if (existing) existing.remove();
+      var span = document.createElement('span');
+      span.id = errorId;
+      span.className = 'error-message';
+      span.textContent = message;
+      container.appendChild(span);
+    }
+
+    function clearError(errorId) {
+      var el = document.getElementById(errorId);
+      if (el) el.remove();
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+
+      var nameBroken    = document.getElementById('name-broken');
+      var nameFixed     = document.getElementById('name-fixed');
+      var empidBroken   = document.getElementById('empid-broken');
+      var empidFixed    = document.getElementById('empid-fixed');
+      var phoneBroken   = document.getElementById('phone-broken');
+      var phoneFixed    = document.getElementById('phone-fixed');
+      var numberBroken  = document.getElementById('number-broken');
+      var numberFixed   = document.getElementById('number-fixed');
+
+      // --- Pair 1: Required field ---
+
+      // Broken: inject error with no aria-invalid, no aria-describedby
+      if (!nameBroken.value.trim()) {
+        injectError('name-broken-group', 'name-broken-error', 'This field is required.');
+      } else {
+        clearError('name-broken-error');
+      }
+
+      // Fixed: set aria-invalid and aria-describedby, inject descriptive error
+      if (!nameFixed.value.trim()) {
+        nameFixed.setAttribute('aria-invalid', 'true');
+        nameFixed.setAttribute('aria-describedby', 'name-fixed-error');
+        injectError('name-fixed-group', 'name-fixed-error', 'Full name is required.');
+      } else {
+        nameFixed.removeAttribute('aria-invalid');
+        nameFixed.removeAttribute('aria-describedby');
+        clearError('name-fixed-error');
+      }
+
+      // --- Pair 2: Format instructions ---
+
+      // Broken: no aria-invalid, vague error, hint unassociated
+      if (isInvalidEmpId(empidBroken.value)) {
+        injectError('empid-broken-group', 'empid-broken-error', 'Invalid entry.');
+      } else {
+        clearError('empid-broken-error');
+      }
+
+      // Fixed: aria-invalid set, aria-describedby covers both hint and injected error
+      if (isInvalidEmpId(empidFixed.value)) {
+        empidFixed.setAttribute('aria-invalid', 'true');
+        empidFixed.setAttribute('aria-describedby', 'empid-hint empid-fixed-error');
+        injectError('empid-fixed-group', 'empid-fixed-error', 'Invalid format. Expected: two letters followed by six digits, e.g. AB123456.');
+      } else {
+        empidFixed.removeAttribute('aria-invalid');
+        empidFixed.setAttribute('aria-describedby', 'empid-hint');
+        clearError('empid-fixed-error');
+      }
+
+      // --- Pair 3: Phone, no instructions ---
+
+      // Broken: no aria-invalid, vague error, no hint
+      if (isInvalidPhone(phoneBroken.value)) {
+        injectError('phone-broken-group', 'phone-broken-error', 'Invalid phone number.');
+      } else {
+        clearError('phone-broken-error');
+      }
+
+      // Fixed: aria-invalid, aria-describedby covers hint and injected error
+      if (isInvalidPhone(phoneFixed.value)) {
+        phoneFixed.setAttribute('aria-invalid', 'true');
+        phoneFixed.setAttribute('aria-describedby', 'phone-hint phone-fixed-error');
+        injectError('phone-fixed-group', 'phone-fixed-error', 'Invalid phone number. Expected format: 555-867-5309.');
+      } else {
+        phoneFixed.removeAttribute('aria-invalid');
+        phoneFixed.setAttribute('aria-describedby', 'phone-hint');
+        clearError('phone-fixed-error');
+      }
+
+      // --- Pair 4: Placeholder-only ---
+
+      // Broken: no aria-invalid, vague error
+      if (isInvalidPhone(numberBroken.value)) {
+        injectError('number-broken-group', 'number-broken-error', 'Invalid number.');
+      } else {
+        clearError('number-broken-error');
+      }
+
+      // Fixed: aria-invalid, aria-describedby added dynamically with injected error
+      if (isInvalidPhone(numberFixed.value)) {
+        numberFixed.setAttribute('aria-invalid', 'true');
+        numberFixed.setAttribute('aria-describedby', 'number-fixed-error');
+        injectError('number-fixed-group', 'number-fixed-error', 'Invalid phone number format. Input should look like: 555-867-5309.');
+      } else {
+        numberFixed.removeAttribute('aria-invalid');
+        numberFixed.removeAttribute('aria-describedby');
+        clearError('number-fixed-error');
+      }
+    }
+  </script>
+
+</body>
+</html>
